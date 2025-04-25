@@ -3,7 +3,7 @@ let currentTemplate = null;
 let currentTemplateName = '';
 
 async function loadTemplateList() {
-  const response = await fetch('templates/template_list.json');
+  const response = await fetch('./templates/template_list.json');
   const data = await response.json();
   const select = document.getElementById('templateSelect');
   select.innerHTML = '';
