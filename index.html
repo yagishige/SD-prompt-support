@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>プロンプトテンプレートビルダー</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>プロンプト構築ツール</h1>
+
+  <div>
+    <label for="templateSelect">テンプレートを選択：</label>
+    <select id="templateSelect"></select>
+    <button onclick="duplicateTemplate()">複製</button>
+    <button onclick="saveTemplate()">保存</button>
+    <button onclick="addGroup()">グループ追加</button>
+  </div>
+
+  <div id="groupContainer"></div>
+
+  <h2>正のプロンプト</h2>
+  <textarea id="positivePrompt" rows="3" readonly></textarea>
+
+  <h2>ネガティブプロンプト</h2>
+  <textarea id="negativePrompt" rows="3" readonly></textarea>
+
+  <script src="app.js"></script>
+</body>
+</html>

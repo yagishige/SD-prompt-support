@@ -1,0 +1,37 @@
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background: #f5f5f5;
+}
+h1, h2 {
+  color: #333;
+}
+.group {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 10px;
+  margin-top: 15px;
+}
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 5px;
+  background: #eee;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.tag.selected {
+  background: #b3e5fc;
+}
+button {
+  margin: 5px;
+}
+textarea {
+  width: 100%;
+}
