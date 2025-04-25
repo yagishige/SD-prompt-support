@@ -1,0 +1,22 @@
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background: #f7f7f7;
+}
+h1, h2 {
+  color: #333;
+}
+.group {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 15px;
+  background: white;
+}
+.group-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.tag {
+  margin-right: 10px;
+}
