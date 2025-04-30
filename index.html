@@ -34,12 +34,15 @@
     <div class="modal-content">
       <h3>グループ編集</h3>
       <label>名称：<input type="text" id="groupEditName" /></label>
-      <div class="modal-buttons">
-        <button onclick="confirmGroupEdit()">保存</button>
-        <button onclick="closeModal('groupModal')">キャンセル</button>
-      </div>
-    </div>
-  </div>
+      
+<div class="modal-buttons">
+  <button onclick="confirmTagEdit()" id="tagEditBtn">保存</button>
+  <button onclick="confirmTagAdd()" id="tagAddBtn" class="hidden">追加</button>
+  <button onclick="deleteTag()">削除</button>
+  <button onclick="closeModal('tagModal')">キャンセル</button>
+</div>
+</div>
+</div>
 
   <div id="tagModal" class="modal hidden">
     <div class="modal-content">
@@ -52,13 +55,15 @@
           <option value="negative">負</option>
         </select>
       </label>
-      <div class="modal-buttons">
-        <button onclick="confirmTagEdit()">保存</button>
-        <button onclick="deleteTag()">削除</button>
-        <button onclick="closeModal('tagModal')">キャンセル</button>
-      </div>
-    </div>
-  </div>
+      
+<div class="modal-buttons">
+  <button onclick="confirmTagEdit()" id="tagEditBtn">保存</button>
+  <button onclick="confirmTagAdd()" id="tagAddBtn" class="hidden">追加</button>
+  <button onclick="deleteTag()">削除</button>
+  <button onclick="closeModal('tagModal')">キャンセル</button>
+</div>
+</div>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="app.js"></script>
@@ -68,11 +73,14 @@
   <div class="modal-content">
     <h3 id="templateModalTitle">テンプレート編集</h3>
     <label>テンプレート名：<input type="text" id="templateEditName" /></label>
-    <div class="modal-buttons">
-      <button id="templateModalConfirmBtn" onclick="confirmTemplateEdit()">保存</button>
-      <button onclick="closeModal('templateModal')">キャンセル</button>
-    </div>
-  </div>
+    
+<div class="modal-buttons">
+  <button onclick="confirmTagEdit()" id="tagEditBtn">保存</button>
+  <button onclick="confirmTagAdd()" id="tagAddBtn" class="hidden">追加</button>
+  <button onclick="deleteTag()">削除</button>
+  <button onclick="closeModal('tagModal')">キャンセル</button>
+</div>
+</div>
 </div>
 
 
@@ -81,11 +89,14 @@
   <div class="modal-content">
     <h3>テンプレート複製</h3>
     <label>新しいテンプレート名：<input type="text" id="templateDuplicateName" /></label>
-    <div class="modal-buttons">
-      <button onclick="confirmTemplateDuplicate()">複製</button>
-      <button onclick="closeModal('templateDuplicateModal')">キャンセル</button>
-    </div>
-  </div>
+    
+<div class="modal-buttons">
+  <button onclick="confirmTagEdit()" id="tagEditBtn">保存</button>
+  <button onclick="confirmTagAdd()" id="tagAddBtn" class="hidden">追加</button>
+  <button onclick="deleteTag()">削除</button>
+  <button onclick="closeModal('tagModal')">キャンセル</button>
+</div>
+</div>
 </div>
 </body>
 </html>
