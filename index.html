@@ -2,11 +2,11 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>プロンプトテンプレートビルダー v0.2</title>
+  <title>プロンプトテンプレートビルダー v0.3</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>プロンプト構築ツール（重み・並び替え対応版）</h1>
+  <h1>プロンプト構築ツール（重み・並び替え・編集対応版）</h1>
 
   <div>
     <label for="templateSelect">テンプレートを選択：</label>
@@ -19,13 +19,43 @@
   <div id="groupContainer"></div>
 
   <h2>正のプロンプト</h2>
-  <ul id="positivePromptList"></ul>
+  <ul id="positivePromptList" class="sortable-list"></ul>
 
   <h2>ネガティブプロンプト</h2>
-  <ul id="negativePromptList"></ul>
+  <ul id="negativePromptList" class="sortable-list"></ul>
 
   <h2>出力結果</h2>
   <textarea id="outputPrompt" rows="4" readonly></textarea>
+
+  <div id="groupModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>グループ編集</h3>
+      <label>名称：<input type="text" id="groupEditName" /></label>
+      <div class="modal-buttons">
+        <button onclick="confirmGroupEdit()">保存</button>
+        <button onclick="closeModal('groupModal')">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tagModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>タグ編集</h3>
+      <label>表示名：<input type="text" id="tagEditLabel" /></label>
+      <label>プロンプト：<input type="text" id="tagEditPrompt" /></label>
+      <label>タイプ：
+        <select id="tagEditType">
+          <option value="positive">正</option>
+          <option value="negative">負</option>
+        </select>
+      </label>
+      <div class="modal-buttons">
+        <button onclick="confirmTagEdit()">保存</button>
+        <button onclick="deleteTag()">削除</button>
+        <button onclick="closeModal('tagModal')">キャンセル</button>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="app.js"></script>
