@@ -4,16 +4,32 @@
       "id": "emotion",
       "label": "表情",
       "tags": [
-        { "label": "微笑み", "prompt": "gentle smile", "type": "positive" },
-        { "label": "怒り", "prompt": "angry expression", "type": "positive" }
+        {
+          "label": "微笑み",
+          "prompt": "gentle smile",
+          "type": "positive"
+        },
+        {
+          "label": "怒り",
+          "prompt": "angry expression",
+          "type": "positive"
+        }
       ]
     },
     {
       "id": "pose",
       "label": "ポーズ",
       "tags": [
-        { "label": "横向き", "prompt": "side profile", "type": "positive" },
-        { "label": "正面", "prompt": "frontal view", "type": "positive" }
+        {
+          "label": "横向き",
+          "prompt": "side profile",
+          "type": "positive"
+        },
+        {
+          "label": "正面",
+          "prompt": "frontal view",
+          "type": "positive"
+        }
       ]
     }
   ]
