@@ -145,6 +145,7 @@ function openTagEditModal(groupId, tag) {
   document.getElementById('tagEditPrompt').value = tag.prompt;
   document.getElementById('tagEditType').value = tag.type;
   document.getElementById('tagModal').classList.remove('hidden');
+  document.querySelector('#tagModal h3').textContent = isTagAddMode ? 'タグ追加' : 'タグ編集';
   toggleTagModalButtons();
 }
 
@@ -155,6 +156,7 @@ function openTagAddModal(groupId) {
   document.getElementById('tagEditPrompt').value = '';
   document.getElementById('tagEditType').value = 'positive';
   document.getElementById('tagModal').classList.remove('hidden');
+  document.querySelector('#tagModal h3').textContent = isTagAddMode ? 'タグ追加' : 'タグ編集';
   toggleTagModalButtons();
 }
 
@@ -274,3 +276,45 @@ loadTemplateList();
 
 new Sortable(positivePromptList, { animation: 150, onSort: updateOutput });
 new Sortable(negativePromptList, { animation: 150, onSort: updateOutput });
+
+
+let isTemplateAddMode = false;
+
+function openTemplateEditModal() {
+  isTemplateAddMode = false;
+  document.getElementById('templateModalTitle').textContent = 'テンプレート編集';
+  document.getElementById('templateEditName').value = currentTemplateName;
+  document.getElementById('templateModalConfirmBtn').onclick = confirmTemplateEdit;
+  document.getElementById('templateModal').classList.remove('hidden');
+}
+
+function openTemplateAddModal() {
+  isTemplateAddMode = true;
+  document.getElementById('templateModalTitle').textContent = 'テンプレート追加';
+  document.getElementById('templateEditName').value = '';
+  document.getElementById('templateModalConfirmBtn').onclick = confirmTemplateEdit;
+  document.getElementById('templateModal').classList.remove('hidden');
+}
+
+function confirmTemplateEdit() {
+  const newName = document.getElementById('templateEditName').value.trim();
+  if (!newName) {
+    alert('テンプレート名を入力してください');
+    return;
+  }
+
+  if (isTemplateAddMode) {
+    // 新規作成
+    const newTemplate = { groups: [] };
+    currentTemplate = newTemplate;
+    currentTemplateName = newName;
+    renderGroups();
+    alert('テンプレートを追加しました。保存してください。');
+  } else {
+    // 名前変更のみ
+    currentTemplateName = newName;
+    alert('テンプレート名を変更しました。保存してください。');
+  }
+
+  closeModal('templateModal');
+}
