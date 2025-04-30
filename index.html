@@ -1,13 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>プロンプトテンプレートビルダー</title>
+  <title>プロンプトテンプレートビルダー v0.2</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>プロンプト構築ツール</h1>
+  <h1>プロンプト構築ツール（重み・並び替え対応版）</h1>
 
   <div>
     <label for="templateSelect">テンプレートを選択：</label>
@@ -20,11 +19,15 @@
   <div id="groupContainer"></div>
 
   <h2>正のプロンプト</h2>
-  <textarea id="positivePrompt" rows="3" readonly></textarea>
+  <ul id="positivePromptList"></ul>
 
   <h2>ネガティブプロンプト</h2>
-  <textarea id="negativePrompt" rows="3" readonly></textarea>
+  <ul id="negativePromptList"></ul>
 
+  <h2>出力結果</h2>
+  <textarea id="outputPrompt" rows="4" readonly></textarea>
+
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
