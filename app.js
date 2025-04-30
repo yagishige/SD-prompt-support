@@ -4,6 +4,7 @@ let currentTemplate = null;
 let currentTemplateName = '';
 let editingGroupId = null;
 let editingTagContext = null;
+let isTagAddMode = false;
 
 async function loadTemplateList() {
   const response = await fetch('./templates/template_list.json');
@@ -52,7 +53,7 @@ function renderGroups() {
       <div>
         <button onclick="openGroupEditModal('${group.id}')">編集</button>
         <button onclick="deleteGroup('${group.id}')">削除</button>
-        <button onclick="addTag('${group.id}')">タグ追加</button>
+        <button onclick="openTagAddModal('${group.id}')">タグ追加</button>
       </div>`;
 
     groupDiv.appendChild(header);
@@ -139,10 +140,22 @@ function createTagElement(groupId, tag) {
 
 function openTagEditModal(groupId, tag) {
   editingTagContext = { groupId, tag };
+  isTagAddMode = false;
   document.getElementById('tagEditLabel').value = tag.label;
   document.getElementById('tagEditPrompt').value = tag.prompt;
   document.getElementById('tagEditType').value = tag.type;
   document.getElementById('tagModal').classList.remove('hidden');
+  toggleTagModalButtons();
+}
+
+function openTagAddModal(groupId) {
+  editingTagContext = { groupId, tag: null };
+  isTagAddMode = true;
+  document.getElementById('tagEditLabel').value = '';
+  document.getElementById('tagEditPrompt').value = '';
+  document.getElementById('tagEditType').value = 'positive';
+  document.getElementById('tagModal').classList.remove('hidden');
+  toggleTagModalButtons();
 }
 
 function confirmTagEdit() {
@@ -154,6 +167,19 @@ function confirmTagEdit() {
   renderGroups();
 }
 
+function confirmTagAdd() {
+  const groupId = editingTagContext.groupId;
+  const label = document.getElementById('tagEditLabel').value.trim();
+  const promptText = document.getElementById('tagEditPrompt').value.trim();
+  const type = document.getElementById('tagEditType').value;
+  if (label && promptText) {
+    const group = currentTemplate.groups.find(g => g.id === groupId);
+    group.tags.push({ label, prompt: promptText, type });
+    closeModal('tagModal');
+    renderGroups();
+  }
+}
+
 function deleteTag() {
   const { groupId, tag } = editingTagContext;
   const group = currentTemplate.groups.find(g => g.id === groupId);
@@ -162,15 +188,10 @@ function deleteTag() {
   renderGroups();
 }
 
-function addTag(groupId) {
-  const label = prompt('タグの表示名を入力してください:');
-  const promptText = prompt('プロンプトに追加する英語テキストを入力してください:');
-  const type = confirm('正のプロンプトですか？（OKなら正／キャンセルならネガティブ）') ? 'positive' : 'negative';
-  if (label && promptText) {
-    const group = currentTemplate.groups.find(g => g.id === groupId);
-    group.tags.push({ label, prompt: promptText, type });
-    renderGroups();
-  }
+function toggleTagModalButtons() {
+  document.querySelector("button[onclick='confirmTagEdit()']").style.display = isTagAddMode ? 'none' : '';
+  document.querySelector("button[onclick='deleteTag()']").style.display = isTagAddMode ? 'none' : '';
+  document.querySelector("button[onclick='confirmTagAdd()']").style.display = isTagAddMode ? '' : 'none';
 }
 
 function addToPromptList(prompt, type, weight) {
