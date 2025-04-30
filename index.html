@@ -11,6 +11,12 @@
   <div>
     <label for="templateSelect">テンプレートを選択：</label>
     <select id="templateSelect"></select>
+    <button onclick="openTemplateEditModal()">編集</button>
+    <button onclick="openTemplateAddModal()">追加</button>
+    <button onclick="duplicateTemplate()">複製</button>
+    <button onclick="saveTemplate()">保存</button>
+    <span style="margin: 0 10px;">｜</span>
+    <button onclick="addGroup()">グループ追加</button>
     <button onclick="duplicateTemplate()">複製</button>
     <button onclick="saveTemplate()">保存</button>
     <button onclick="addGroup()">グループ追加</button>
@@ -59,5 +65,18 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="app.js"></script>
+
+<!-- テンプレート編集/追加モーダル -->
+<div id="templateModal" class="modal hidden">
+  <div class="modal-content">
+    <h3 id="templateModalTitle">テンプレート編集</h3>
+    <label>テンプレート名：<input type="text" id="templateEditName" /></label>
+    <div class="modal-buttons">
+      <button id="templateModalConfirmBtn" onclick="confirmTemplateEdit()">保存</button>
+      <button onclick="closeModal('templateModal')">キャンセル</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
