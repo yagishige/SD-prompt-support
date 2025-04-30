@@ -13,10 +13,16 @@
     <select id="templateSelect"></select>
     <button onclick="openTemplateEditModal()">編集</button>
     <button onclick="openTemplateAddModal()">追加</button>
-    <button onclick="duplicateTemplate()">複製</button>
+    <button onclick="openTemplateDuplicateModal()">複製</button>
     <button onclick="saveTemplate()">保存</button>
     <span style="margin: 0 10px;">｜</span>
     <button onclick="addGroup()">グループ追加</button>
+    <button onclick="openTemplateEditModal()">編集</button>
+    <button onclick="openTemplateAddModal()">追加</button>
+    
+    
+    <span style="margin: 0 10px;">｜</span>
+    
     <button onclick="duplicateTemplate()">複製</button>
     <button onclick="saveTemplate()">保存</button>
     <button onclick="addGroup()">グループ追加</button>
@@ -78,5 +84,17 @@
   </div>
 </div>
 
+
+<!-- テンプレート複製モーダル -->
+<div id="templateDuplicateModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>テンプレート複製</h3>
+    <label>新しいテンプレート名：<input type="text" id="templateDuplicateName" /></label>
+    <div class="modal-buttons">
+      <button onclick="confirmTemplateDuplicate()">複製</button>
+      <button onclick="closeModal('templateDuplicateModal')">キャンセル</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
