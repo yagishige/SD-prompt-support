@@ -25,7 +25,7 @@ async function loadTemplateList() {
 }
 
 async function loadTemplate(name) {
-  const response = await fetch(`templates/${name}.json`);
+  const response = await fetch(`./templates/${name}.json`);
   const data = await response.json();
   currentTemplate = data;
   currentTemplateName = name;
@@ -58,8 +58,6 @@ function renderGroups() {
     groupDiv.appendChild(tagContainer);
     container.appendChild(groupDiv);
   }
-
-  updatePrompts();
 }
 
 function createTagElement(groupId, tag) {
@@ -68,27 +66,70 @@ function createTagElement(groupId, tag) {
   span.textContent = tag.label;
   span.dataset.prompt = tag.prompt;
   span.dataset.type = tag.type;
+  span.dataset.weight = "1.0";
+
   span.addEventListener('click', () => {
     span.classList.toggle('selected');
-    updatePrompts();
+    if (span.classList.contains('selected')) {
+      addToPromptList(span.dataset.prompt, span.dataset.type, 1.0);
+    } else {
+      removeFromPromptList(span.dataset.prompt, span.dataset.type);
+    }
   });
   return span;
 }
 
-function updatePrompts() {
-  const positive = [];
-  const negative = [];
+function addToPromptList(prompt, type, weight) {
+  const li = document.createElement('li');
+  li.dataset.prompt = prompt;
+  li.dataset.weight = weight;
+  li.textContent = prompt;
 
-  document.querySelectorAll('.tag.selected').forEach(tag => {
-    if (tag.dataset.type === 'positive') {
-      positive.push(tag.dataset.prompt);
-    } else {
-      negative.push(tag.dataset.prompt);
-    }
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.min = "0.0";
+  slider.max = "3.0";
+  slider.step = "0.1";
+  slider.value = weight;
+  slider.className = 'weight-slider';
+  slider.addEventListener('input', () => {
+    li.dataset.weight = slider.value;
+    updateOutput();
   });
 
-  document.getElementById('positivePrompt').value = positive.join(', ');
-  document.getElementById('negativePrompt').value = negative.join(', ');
+  li.appendChild(slider);
+
+  if (type === 'positive') {
+    document.getElementById('positivePromptList').appendChild(li);
+  } else {
+    document.getElementById('negativePromptList').appendChild(li);
+  }
+  updateOutput();
+}
+
+function removeFromPromptList(prompt, type) {
+  const list = (type === 'positive') ? document.getElementById('positivePromptList') : document.getElementById('negativePromptList');
+  [...list.children].forEach(li => {
+    if (li.dataset.prompt === prompt) {
+      list.removeChild(li);
+    }
+  });
+  updateOutput();
+}
+
+function updateOutput() {
+  const positives = [...document.getElementById('positivePromptList').children];
+  const negatives = [...document.getElementById('negativePromptList').children];
+
+  const positivePrompts = positives.map(li => formatPrompt(li.dataset.prompt, li.dataset.weight));
+  const negativePrompts = negatives.map(li => formatPrompt(li.dataset.prompt, li.dataset.weight));
+
+  const output = positivePrompts.join(', ') + (negativePrompts.length ? " --neg " + negativePrompts.join(', ') : '');
+  document.getElementById('outputPrompt').value = output;
+}
+
+function formatPrompt(prompt, weight) {
+  return (parseFloat(weight) === 1.0) ? prompt : `(${prompt}:${weight})`;
 }
 
 function addGroup() {
@@ -136,3 +177,6 @@ function saveTemplate() {
 }
 
 loadTemplateList();
+
+new Sortable(positivePromptList, { animation: 150, onSort: updateOutput });
+new Sortable(negativePromptList, { animation: 150, onSort: updateOutput });
