@@ -1,6 +1,9 @@
+
 let templates = {};
 let currentTemplate = null;
 let currentTemplateName = '';
+let editingGroupId = null;
+let editingTagContext = null;
 
 async function loadTemplateList() {
   const response = await fetch('./templates/template_list.json');
@@ -36,27 +39,72 @@ function renderGroups() {
   const container = document.getElementById('groupContainer');
   container.innerHTML = '';
 
-  for (const group of currentTemplate.groups) {
+  currentTemplate.groups.forEach((group, index) => {
     const groupDiv = document.createElement('div');
     groupDiv.className = 'group';
+    groupDiv.dataset.groupId = group.id;
 
     const header = document.createElement('div');
     header.className = 'group-header';
-    header.innerHTML = `<strong>${group.label}</strong> 
-      <button onclick="addTag('${group.id}')">タグ追加</button>
-      <button onclick="deleteGroup('${group.id}')">グループ削除</button>`;
+
+    header.innerHTML = `
+      <strong>${group.label}</strong>
+      <div>
+        <button onclick="openGroupEditModal('${group.id}')">編集</button>
+        <button onclick="deleteGroup('${group.id}')">削除</button>
+        <button onclick="addTag('${group.id}')">タグ追加</button>
+      </div>`;
+
     groupDiv.appendChild(header);
 
     const tagContainer = document.createElement('div');
     tagContainer.id = `tags-${group.id}`;
 
-    for (const tag of group.tags) {
+    group.tags.forEach(tag => {
       const tagElem = createTagElement(group.id, tag);
       tagContainer.appendChild(tagElem);
-    }
+    });
 
     groupDiv.appendChild(tagContainer);
     container.appendChild(groupDiv);
+  });
+
+  Sortable.create(container, {
+    animation: 150,
+    onEnd: () => {
+      const newOrder = [...container.children].map(el => el.dataset.groupId);
+      currentTemplate.groups.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
+    }
+  });
+}
+
+function openGroupEditModal(groupId) {
+  editingGroupId = groupId;
+  const group = currentTemplate.groups.find(g => g.id === groupId);
+  document.getElementById('groupEditName').value = group.label;
+  document.getElementById('groupModal').classList.remove('hidden');
+}
+
+function confirmGroupEdit() {
+  const name = document.getElementById('groupEditName').value.trim();
+  if (name && editingGroupId) {
+    const group = currentTemplate.groups.find(g => g.id === editingGroupId);
+    group.label = name;
+    closeModal('groupModal');
+    renderGroups();
+  }
+}
+
+function addGroup() {
+  const id = 'group' + Date.now();
+  currentTemplate.groups.push({ id, label: '新しいグループ', tags: [] });
+  renderGroups();
+}
+
+function deleteGroup(groupId) {
+  if (confirm('このグループを削除してよろしいですか？')) {
+    currentTemplate.groups = currentTemplate.groups.filter(g => g.id !== groupId);
+    renderGroups();
   }
 }
 
@@ -66,17 +114,63 @@ function createTagElement(groupId, tag) {
   span.textContent = tag.label;
   span.dataset.prompt = tag.prompt;
   span.dataset.type = tag.type;
-  span.dataset.weight = "1.0";
+  span.dataset.groupId = groupId;
 
   span.addEventListener('click', () => {
     span.classList.toggle('selected');
     if (span.classList.contains('selected')) {
-      addToPromptList(span.dataset.prompt, span.dataset.type, 1.0);
+      addToPromptList(tag.prompt, tag.type, 1.0);
     } else {
-      removeFromPromptList(span.dataset.prompt, span.dataset.type);
+      removeFromPromptList(tag.prompt, tag.type);
     }
   });
+
+  let pressTimer;
+  span.addEventListener('mousedown', (e) => {
+    pressTimer = setTimeout(() => {
+      openTagEditModal(groupId, tag);
+    }, 600);
+  });
+  span.addEventListener('mouseup', () => clearTimeout(pressTimer));
+  span.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+
   return span;
+}
+
+function openTagEditModal(groupId, tag) {
+  editingTagContext = { groupId, tag };
+  document.getElementById('tagEditLabel').value = tag.label;
+  document.getElementById('tagEditPrompt').value = tag.prompt;
+  document.getElementById('tagEditType').value = tag.type;
+  document.getElementById('tagModal').classList.remove('hidden');
+}
+
+function confirmTagEdit() {
+  const { groupId, tag } = editingTagContext;
+  tag.label = document.getElementById('tagEditLabel').value.trim();
+  tag.prompt = document.getElementById('tagEditPrompt').value.trim();
+  tag.type = document.getElementById('tagEditType').value;
+  closeModal('tagModal');
+  renderGroups();
+}
+
+function deleteTag() {
+  const { groupId, tag } = editingTagContext;
+  const group = currentTemplate.groups.find(g => g.id === groupId);
+  group.tags = group.tags.filter(t => t !== tag);
+  closeModal('tagModal');
+  renderGroups();
+}
+
+function addTag(groupId) {
+  const label = prompt('タグの表示名を入力してください:');
+  const promptText = prompt('プロンプトに追加する英語テキストを入力してください:');
+  const type = confirm('正のプロンプトですか？（OKなら正／キャンセルならネガティブ）') ? 'positive' : 'negative';
+  if (label && promptText) {
+    const group = currentTemplate.groups.find(g => g.id === groupId);
+    group.tags.push({ label, prompt: promptText, type });
+    renderGroups();
+  }
 }
 
 function addToPromptList(prompt, type, weight) {
@@ -132,29 +226,8 @@ function formatPrompt(prompt, weight) {
   return (parseFloat(weight) === 1.0) ? prompt : `(${prompt}:${weight})`;
 }
 
-function addGroup() {
-  const label = prompt('新しいグループ名を入力してください:');
-  if (label) {
-    const id = 'group' + Date.now();
-    currentTemplate.groups.push({ id, label, tags: [] });
-    renderGroups();
-  }
-}
-
-function deleteGroup(groupId) {
-  currentTemplate.groups = currentTemplate.groups.filter(g => g.id !== groupId);
-  renderGroups();
-}
-
-function addTag(groupId) {
-  const label = prompt('タグの表示名を入力してください:');
-  const promptText = prompt('プロンプトに追加する英語テキストを入力してください:');
-  const type = confirm('正のプロンプトですか？（OKなら正／キャンセルならネガティブ）') ? 'positive' : 'negative';
-  if (label && promptText) {
-    const group = currentTemplate.groups.find(g => g.id === groupId);
-    group.tags.push({ label, prompt: promptText, type });
-    renderGroups();
-  }
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
 }
 
 function duplicateTemplate() {
