@@ -336,3 +336,9 @@ function confirmTemplateDuplicate() {
     alert('テンプレートを複製しました。保存してください。');
   }
 }
+
+function toggleTagModalButtons() {
+  document.getElementById("tagEditBtn").style.display = isTagAddMode ? "none" : "";
+  document.getElementById("tagAddBtn").style.display = isTagAddMode ? "" : "none";
+  document.querySelector("button[onclick='deleteTag()']").style.display = isTagAddMode ? "none" : "";
+}
