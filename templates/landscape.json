@@ -4,32 +4,16 @@
       "id": "weather",
       "label": "天候",
       "tags": [
-        {
-          "label": "晴れ",
-          "prompt": "clear sky",
-          "type": "positive"
-        },
-        {
-          "label": "曇り",
-          "prompt": "overcast",
-          "type": "positive"
-        }
+        { "label": "晴れ", "prompt": "clear sky", "type": "positive" },
+        { "label": "曇り", "prompt": "overcast", "type": "positive" }
       ]
     },
     {
       "id": "motif",
       "label": "自然要素",
       "tags": [
-        {
-          "label": "山",
-          "prompt": "mountain",
-          "type": "positive"
-        },
-        {
-          "label": "湖",
-          "prompt": "lake",
-          "type": "positive"
-        }
+        { "label": "山", "prompt": "mountain", "type": "positive" },
+        { "label": "湖", "prompt": "lake", "type": "positive" }
       ]
     }
   ]
