@@ -1,6 +1,3 @@
 {
-  "templates": [
-    "landscape",
-    "portrait"
-  ]
+  "templates": ["landscape", "portrait"]
 }
