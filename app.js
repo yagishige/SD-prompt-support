@@ -318,3 +318,21 @@ function confirmTemplateEdit() {
 
   closeModal('templateModal');
 }
+
+
+function openTemplateDuplicateModal() {
+  document.getElementById('templateDuplicateName').value = currentTemplateName + '_copy';
+  document.getElementById('templateDuplicateModal').classList.remove('hidden');
+}
+
+function confirmTemplateDuplicate() {
+  const name = document.getElementById('templateDuplicateName').value.trim();
+  if (name) {
+    const newTemplate = JSON.parse(JSON.stringify(currentTemplate));
+    currentTemplate = newTemplate;
+    currentTemplateName = name;
+    renderGroups();
+    closeModal('templateDuplicateModal');
+    alert('テンプレートを複製しました。保存してください。');
+  }
+}
